@@ -1,0 +1,9 @@
+| Endpoint                    | Method  | Auth Required  | Description                   |
+| --------------------------- | ------- | -------------- | ----------------------------- |
+| `/api/auth/users/register/` | `POST`  | ❌              | Register new user             |
+| `/api/auth/users/login/`    | `POST`  | ❌              | Log in and get token          |
+| `/api/auth/users/logout/`   | `POST`  | ✅              | Invalidate current token      |
+| `/api/auth/users/me/`       | `GET`   | ✅              | Get current user profile      |
+| `/api/auth/users/`          | `GET`   | ✅ (Admin only) | List all users                |
+| `/api/auth/users/<uuid>/`   | `GET`   | ✅              | Retrieve user (self or admin) |
+| `/api/auth/users/<uuid>/`   | `PATCH` | ✅              | Update user profile           |

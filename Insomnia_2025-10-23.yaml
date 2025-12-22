@@ -1,0 +1,203 @@
+type: collection.insomnia.rest/5.0
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1761200936085
+  modified: 1761200936085
+  description: ""
+collection:
+  - name: users
+    meta:
+      id: fld_673e4410139740ae811a4f607e184f4b
+      created: 1761200989151
+      modified: 1761200989151
+      sortKey: -1761200989151
+      description: ""
+    children:
+      - url: http://127.0.0.1:8000/api/v1/auth/users/login/
+        name: signin
+        meta:
+          id: req_99ad21bb4f6342a2bd0c8bcb51fd4a55
+          created: 1761200998932
+          modified: 1761202521209
+          isPrivate: false
+          description: ""
+          sortKey: -1761200998933
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "test@test.com",
+            	"password": "12345678"
+            }
+        parameters:
+          - id: pair_39b0bdf0e1e54a81a0a8fec628bfe78d
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/v1/auth/users/register/
+        name: signup
+        meta:
+          id: req_f18a206ae2cc4564b9bea82400e74ba6
+          created: 1761201730971
+          modified: 1761203009120
+          isPrivate: false
+          description: ""
+          sortKey: -1761200998883
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"full_name": "test test",
+            	"email": "test19@test.com",
+            	"password": "12345678",
+            	"confirm_password": "12345678",
+            	"role": "student"
+            }
+        parameters:
+          - id: pair_9c62648dbbcf409d911ac0c4556fcddc
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/v1/auth/users/me/
+        name: me
+        meta:
+          id: req_b148b888bfd54e928a01bd6d70887b62
+          created: 1761202251732
+          modified: 1761203415205
+          isPrivate: false
+          description: ""
+          sortKey: -1761200998833
+        method: GET
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMjA2NTI5LCJpYXQiOjE3NjEyMDI5MjksImp0aSI6IjY3NGVmZDdmNWQ2ZjQ4NzdhOTQzYjQ3NzM2MzllNjc5IiwidXNlcl9pZCI6ImViN2E4M2I0LTE1YWYtNGZjNC04OTEyLTVjMWNmODU1ZGUwMiJ9.OBg6AwA0eHHcraOLJxxyT8w4pv9YCxsszX6QB-gVic8",
+            refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2MTgwNzcyOSwiaWF0IjoxNzYxMjAyOTI5LCJqdGkiOiJjMTFjYTc5MDZmMmU0ZjZhYWE2YWYxYmI1MmU4OGNjYSIsInVzZXJfaWQiOiJlYjdhODNiNC0xNWFmLTRmYzQtODkxMi01YzFjZjg1NWRlMDIifQ.3rb8ce7N-OMyqiJVW8Aef573n6l4R5YBIIQQ66lbvM4"
+            }
+        parameters:
+          - id: pair_9c62648dbbcf409d911ac0c4556fcddc
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        authentication:
+          type: bearer
+          token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMjA2NTI5LCJpYXQiOjE3NjEyMDI5MjksImp0aSI6IjY3NGVmZDdmNWQ2ZjQ4NzdhOTQzYjQ3NzM2MzllNjc5IiwidXNlcl9pZCI6ImViN2E4M2I0LTE1YWYtNGZjNC04OTEyLTVjMWNmODU1ZGUwMiJ9.OBg6AwA0eHHcraOLJxxyT8w4pv9YCxsszX6QB-gVic8
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: http://127.0.0.1:8000/api/v1/auth/users/refresh/
+        name: refresh
+        meta:
+          id: req_5178575a931c428a87eb17bb6fd70c36
+          created: 1761203193744
+          modified: 1761203490958
+          isPrivate: false
+          description: ""
+          sortKey: -1761200998783
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            "refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2MTgwNzcyOSwiaWF0IjoxNzYxMjAyOTI5LCJqdGkiOiJjMTFjYTc5MDZmMmU0ZjZhYWE2YWYxYmI1MmU4OGNjYSIsInVzZXJfaWQiOiJlYjdhODNiNC0xNWFmLTRmYzQtODkxMi01YzFjZjg1NWRlMDIifQ.3rb8ce7N-OMyqiJVW8Aef573n6l4R5YBIIQQ66lbvM4"
+            }
+        parameters:
+          - id: pair_9c62648dbbcf409d911ac0c4556fcddc
+            name: ""
+            value: ""
+            description: ""
+            disabled: false
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/11.6.2
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1761200963601
+    modified: 1761203495308
+  cookies:
+    - key: access_token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxMjA3MDk1LCJpYXQiOjE3NjEyMDM0OTUsImp0aSI6ImIxZDk3ODg3NmIwMzQxYjc4YWQ4MWJiZmQ4NTA3OTVkIiwidXNlcl9pZCI6ImM5ZWQ4YTJlLWI1NDItNDUxZS04M2Y3LWI3NjY4ODMxZTczYSJ9.NqmWouTXFc2QZV1fgXN0DSOKblSi2FkKOLTID_r2r9k
+      maxAge: 3600
+      domain: 127.0.0.1
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-10-23T07:02:09.768Z
+      lastAccessed: 2025-10-23T07:11:35.308Z
+      sameSite: lax
+      id: 33ca1378-b85c-4c1a-9cba-a73b86c23727
+    - key: refresh_token
+      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc2MTgwNzgxMCwiaWF0IjoxNzYxMjAzMDEwLCJqdGkiOiIyZGQ1NGQ5ZWU0Nzc0NmVlOWU5OTY3OTZkMTdjMTQwYiIsInVzZXJfaWQiOiJjOWVkOGEyZS1iNTQyLTQ1MWUtODNmNy1iNzY2ODgzMWU3M2EifQ.RBfRNbTqyI6r_rySxwPh1-qtJvEYdHgPysGpXpN9N0w
+      maxAge: 604800
+      domain: 127.0.0.1
+      path: /
+      secure: true
+      httpOnly: true
+      hostOnly: true
+      creation: 2025-10-23T07:02:09.768Z
+      lastAccessed: 2025-10-23T07:03:30.937Z
+      sameSite: lax
+      id: d247e15d-c749-4e6d-8644-b00f3840c9fa
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1761200963599
+    modified: 1761200963599
+    isPrivate: false

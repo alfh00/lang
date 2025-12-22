@@ -1,0 +1,29 @@
+# ---------- ENV FILES ----------
+.env
+*/.env
+*/env
+
+# ---------- PYTHON / DJANGO ----------
+venv/
+.venv/
+*/venv/
+*/.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+
+# ---------- NODE / NEXT ----------
+node_modules/
+*/node_modules/
+.next/
+out/
+dist/
+
+# ---------- LOGS ----------
+*.log
+
+# ---------- OS ----------
+.DS_Store
+Thumbs.db
