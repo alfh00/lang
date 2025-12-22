@@ -1,11 +1,50 @@
 from django.urls import path
-from .views import UserInfoView, UserRegisterView, UserLoginView, UserLogoutView, CookieTokenRefreshView
+from .views import (
+    AuthMeView,
+    UserRegisterView,
+    UserLoginView,
+    UserLogoutView,
+    CookieTokenRefreshView,
+    StudentMeView,
+    SubmitApplicationView,
+    TeacherMeView,
+    TeachersListView,
+    AvailabilityBlockListCreateView,
+    AvailabilityBlockDetailView,
+    AdminApplicationsListView,
+    AdminApplicationDetailView,
+    AdminApplicationNotesView,
+    AdminApplicationMatchView,
+    LessonListCreateView,
+    LessonDetailView,
+    LessonProposeView,
+    LessonConfirmView,
+    LessonCancelView,
+)
 
 urlpatterns = [
-    path('me/', UserInfoView.as_view(), name='me'),
-    path('register/', UserRegisterView.as_view(), name='register'),
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('logout/', UserLogoutView.as_view(), name='logout'),
-    path('refresh/', CookieTokenRefreshView.as_view(), name='token_refresh'),
+    path("auth/register/", UserRegisterView.as_view(), name="register"),
+    path("auth/login/", UserLoginView.as_view(), name="login"),
+    path("auth/logout/", UserLogoutView.as_view(), name="logout"),
+    path("auth/me/", AuthMeView.as_view(), name="me"),
+    path("auth/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),
 
+    path("students/me/", StudentMeView.as_view(), name="student_me"),
+    path("students/me/submit-application/", SubmitApplicationView.as_view(), name="submit_application"),
+
+    path("teachers/me/", TeacherMeView.as_view(), name="teacher_me"),
+    path("teachers/", TeachersListView.as_view(), name="teachers_list"),
+    path("teachers/me/availability-blocks/", AvailabilityBlockListCreateView.as_view(), name="availability_blocks"),
+    path("teachers/me/availability-blocks/<int:pk>/", AvailabilityBlockDetailView.as_view(), name="availability_block_detail"),
+
+    path("admin/applications/", AdminApplicationsListView.as_view(), name="admin_applications"),
+    path("admin/applications/<int:pk>/", AdminApplicationDetailView.as_view(), name="admin_application_detail"),
+    path("admin/applications/<int:pk>/notes/", AdminApplicationNotesView.as_view(), name="admin_application_notes"),
+    path("admin/applications/<int:pk>/match/", AdminApplicationMatchView.as_view(), name="admin_application_match"),
+
+    path("lessons/", LessonListCreateView.as_view(), name="lessons"),
+    path("lessons/<int:pk>/", LessonDetailView.as_view(), name="lesson_detail"),
+    path("lessons/<int:pk>/propose/", LessonProposeView.as_view(), name="lesson_propose"),
+    path("lessons/<int:pk>/confirm/", LessonConfirmView.as_view(), name="lesson_confirm"),
+    path("lessons/<int:pk>/cancel/", LessonCancelView.as_view(), name="lesson_cancel"),
 ]
