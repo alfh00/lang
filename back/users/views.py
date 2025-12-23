@@ -6,6 +6,7 @@ from rest_framework.generics import RetrieveUpdateAPIView, CreateAPIView, ListAP
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework_simplejwt.exceptions import InvalidToken
@@ -36,9 +37,12 @@ class AuthMeView(APIView):
 class UserRegisterView(CreateAPIView):
     serializer_class = RegisterUserSerializer
     permission_classes = [AllowAny]
+    authentication_classes = []
 
 
 class UserLoginView(APIView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
     def post(self, request):
         serializer = LoginUserSerializer(data=request.data)
         if serializer.is_valid():
@@ -46,22 +50,31 @@ class UserLoginView(APIView):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
 
-            response = Response({"user": CustomUserSerializer(user).data}, status=status.HTTP_200_OK)
+            response = Response(
+                {
+                    "user": CustomUserSerializer(user).data,
+                    "access_token": access_token,
+                    "refresh_token": str(refresh),
+                },
+                status=status.HTTP_200_OK,
+            )
 
+            secure_cookie = not settings.DEBUG
+            same_site = "None" if secure_cookie else "Lax"
             response.set_cookie(
                 key="access_token",
                 value=access_token,
                 httponly=True,
-                secure=True,
-                samesite="None",
+                secure=secure_cookie,
+                samesite=same_site,
             )
 
             response.set_cookie(
                 key="refresh_token",
                 value=str(refresh),
                 httponly=True,
-                secure=True,
-                samesite="None",
+                secure=secure_cookie,
+                samesite=same_site,
             )
             return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -85,6 +98,8 @@ class UserLogoutView(APIView):
 
 
 class CookieTokenRefreshView(TokenRefreshView):
+    permission_classes = [AllowAny]
+    authentication_classes = []
     def post(self, request, *args, **kwargs):
         refresh_token = request.COOKIES.get("refresh_token")
 
@@ -95,13 +110,18 @@ class CookieTokenRefreshView(TokenRefreshView):
             refresh = RefreshToken(refresh_token)
             access_token = str(refresh.access_token)
 
-            response = Response({"message": "Access token refreshed successfully"}, status=status.HTTP_200_OK)
+            response = Response(
+                {"message": "Access token refreshed successfully", "access_token": access_token},
+                status=status.HTTP_200_OK,
+            )
+            secure_cookie = not settings.DEBUG
+            same_site = "None" if secure_cookie else "Lax"
             response.set_cookie(
                 key="access_token",
                 value=access_token,
                 httponly=True,
-                secure=True,
-                samesite="None",
+                secure=secure_cookie,
+                samesite=same_site,
             )
             return response
         except InvalidToken:

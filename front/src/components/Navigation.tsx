@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 interface NavigationProps {
   user?: {
     email: string
-    username: string
+    full_name: string
     avatar_url?: string
     role?: "student" | "teacher" | "admin"
   } | null
@@ -74,7 +74,7 @@ export function Navigation({ user }: NavigationProps) {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href={`/${user.role}/dashboard`}>Dashboard</Link>
+                      <Link href={`/dashboard/${user.role}`}>Dashboard</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href={`/${user.role}/profile`}>Profile</Link>

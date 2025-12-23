@@ -1,18 +1,19 @@
-import { authApi } from "@/lib/api/client"
 import { NextResponse } from "next/server"
-import { cookies } from "next/headers"
 
-export async function POST() {
+export async function POST(request: Request) {
+  const origin = new URL(request.url).origin
+  const cookieHeader = request.headers.get("cookie") || ""
   try {
-    // Call Django API to sign out
-    await authApi.signOut()
+    await fetch(`${origin}/api/auth/logout`, {
+      method: "POST",
+      headers: { cookie: cookieHeader },
+      cache: "no-store",
+    })
   } catch (error) {
     console.error("Sign out error:", error)
   }
 
-  // Clear auth token cookie
-  const cookieStore = await cookies()
-  cookieStore.delete("auth_token")
-
-  return NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"))
+  const response = NextResponse.redirect(new URL("/", process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"))
+  response.cookies.delete("bff_session")
+  return response
 }

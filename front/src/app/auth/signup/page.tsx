@@ -1,9 +1,10 @@
 "use client"
 import type React from "react"
-import { useState } from "react"
+
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { userApi } from "@/lib/userClient"
+import { authApi } from "@/lib/userClient"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,50 +15,47 @@ export default function SignUpPage() {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [confirm_password, setConfirm_password] = useState("")
-  const [username, setUsername] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [fullName, setFullName] = useState("")
+  const [timezone, setTimezone] = useState("UTC")
   const [role, setRole] = useState<"student" | "teacher">("student")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await authApi.me()
+        const user = response.data
+        router.push(`/dashboard/${user.role}`)
+      } catch {
+        // Not authenticated
+      }
+    }
+    void checkAuth()
+  }, [router])
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
 
-    // Check if passwords match
-    if (password !== confirm_password) {
+    if (password !== confirmPassword) {
       setError("Passwords do not match")
       setLoading(false)
       return
     }
 
     try {
-      const resp = await userApi.register({email, password, username})
-      
-      
-      setSuccess(true)
-      setTimeout(() => {
-        router.push("/auth/signin")
-      }, 2000)
+      await authApi.register({ email, password, full_name: fullName, timezone, role })
+      const response = await authApi.login({ email, password })
+      const { user } = response.data
+      router.push(`/dashboard/${user.role}`)
+      router.refresh()
     } catch (err: any) {
       setError(err.message || "Failed to create account")
       setLoading(false)
     }
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 px-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-center text-green-600">Account created!</CardTitle>
-            <CardDescription className="text-center">Redirecting to sign in...</CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    )
   }
 
   return (
@@ -71,13 +69,13 @@ export default function SignUpPage() {
           <CardContent className="space-y-4">
             {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg text-sm">{error}</div>}
             <div className="space-y-2">
-              <Label htmlFor="username">Full Name</Label>
+              <Label htmlFor="fullName">Full Name</Label>
               <Input
-                id="username"
+                id="fullName"
                 type="text"
                 placeholder="Jean Dupont"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 required
               />
             </div>
@@ -93,11 +91,35 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
+              <Label htmlFor="timezone">Timezone</Label>
+              <Input
+                id="timezone"
+                type="text"
+                placeholder="UTC"
+                value={timezone}
+                onChange={(e) => setTimezone(e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Role</Label>
+              <RadioGroup value={role} onValueChange={(value) => setRole(value as "student" | "teacher")}>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="student" id="role-student" />
+                  <Label htmlFor="role-student">Student</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="teacher" id="role-teacher" />
+                  <Label htmlFor="role-teacher">Teacher</Label>
+                </div>
+              </RadioGroup>
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder="Create a password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -106,18 +128,17 @@ export default function SignUpPage() {
               <p className="text-xs text-gray-500">Must be at least 8 characters</p>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm_password">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
-                id="confirm_password"
+                id="confirmPassword"
                 type="password"
-                placeholder="••••••••"
-                value={confirm_password}
-                onChange={(e) => setConfirm_password(e.target.value)}
+                placeholder="Repeat your password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 minLength={6}
               />
             </div>
-            
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full bg-[#4361ee] hover:bg-[#3651de]" disabled={loading}>

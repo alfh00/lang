@@ -24,10 +24,15 @@ from .views import (
 
 urlpatterns = [
     path("auth/register/", UserRegisterView.as_view(), name="register"),
+    path("auth/register", UserRegisterView.as_view(), name="register_no_slash"),
     path("auth/login/", UserLoginView.as_view(), name="login"),
+    path("auth/login", UserLoginView.as_view(), name="login_no_slash"),
     path("auth/logout/", UserLogoutView.as_view(), name="logout"),
+    path("auth/logout", UserLogoutView.as_view(), name="logout_no_slash"),
     path("auth/me/", AuthMeView.as_view(), name="me"),
+    path("auth/me", AuthMeView.as_view(), name="me_no_slash"),
     path("auth/refresh/", CookieTokenRefreshView.as_view(), name="token_refresh"),
+    path("auth/refresh", CookieTokenRefreshView.as_view(), name="token_refresh_no_slash"),
 
     path("students/me/", StudentMeView.as_view(), name="student_me"),
     path("students/me/submit-application/", SubmitApplicationView.as_view(), name="submit_application"),

@@ -1,13 +1,26 @@
 "use client"
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Navigation } from "@/components/Navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, Clock, Video, Star } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { userApi } from "@/lib/userClient"
-import { use } from "react"
+import { authApi } from "@/lib/userClient"
 
 export default function StudentDashboardPage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await authApi.me()
+      } catch {
+        router.push("/auth/signin")
+      }
+    }
+    void checkAuth()
+  }, [router])
   const upcomingBookings = [
     {
       id: "1",
@@ -45,7 +58,7 @@ export default function StudentDashboardPage() {
 
   const handlerefresh = async () => {
     try {
-      const response = await userApi.refresh()
+      const response = await authApi.refresh()
       console.log(response.data)
     } catch (err) {
       console.error(err)
@@ -54,7 +67,6 @@ export default function StudentDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation user={userProfile} />
-      <button onClick={handlerefresh}>refresh</button>
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Welcome back, {userProfile.full_name}!</h1>

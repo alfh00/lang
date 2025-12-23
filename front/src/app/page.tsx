@@ -5,7 +5,6 @@ import { HowItWorksSection } from "@/components/homePage/how-it-works-section"
 import { TestimonialsSection } from "@/components/homePage/testimonials-section"
 import { CTASection } from "@/components/homePage/cta-section"
 import { Footer } from "@/components/homePage/footer"
-import { userApi } from "@/lib/userClient"
 
 export default function Home() {
 
