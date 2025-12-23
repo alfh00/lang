@@ -168,7 +168,7 @@ export default async function TeacherDashboardPage() {
                     </div>
                   </div>
                   <Button asChild variant="outline" className="w-full bg-transparent">
-                    <a href="/teacher/profile">Complete Profile</a>
+                    <a href="/teacher/availability">Manage Availability</a>
                   </Button>
                 </CardContent>
               </Card>
@@ -180,9 +180,6 @@ export default async function TeacherDashboardPage() {
                 <CardContent className="space-y-2">
                   <Button asChild className="w-full bg-[#4361ee] hover:bg-[#3651d4]">
                     <a href="/teacher/availability">Set Availability</a>
-                  </Button>
-                  <Button asChild variant="outline" className="w-full bg-transparent">
-                    <a href="/teacher/lessons">View All Lessons</a>
                   </Button>
                 </CardContent>
               </Card>

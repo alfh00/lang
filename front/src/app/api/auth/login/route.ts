@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     return NextResponse.json(data, { status: response.status })
   }
 
-  const sessionId = createSession({
+  const sessionToken = createSession({
     accessToken: data.access_token,
     refreshToken: data.refresh_token,
     user: data.user,
@@ -24,6 +24,6 @@ export async function POST(request: Request) {
   })
 
   const nextResponse = NextResponse.json({ user: data.user })
-  setSessionCookie(nextResponse, sessionId)
+  setSessionCookie(nextResponse, sessionToken)
   return nextResponse
 }

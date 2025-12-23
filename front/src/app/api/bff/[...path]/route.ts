@@ -1,19 +1,20 @@
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
-import { SESSION_COOKIE, clearSessionCookie } from "@/lib/bff/cookies"
-import { getSession, updateSession, deleteSession } from "@/lib/bff/sessionStore"
+import { SESSION_COOKIE, clearSessionCookie, setSessionCookie } from "@/lib/bff/cookies"
+import { getSession, updateSession } from "@/lib/bff/sessionStore"
 import { djangoFetch, refreshAccessToken } from "@/lib/bff/django"
 
-async function handler(request: Request, params: { path: string[] }) {
+async function handler(request: Request, params: { path: Promise<{ path: string[] }> | { path: string[] } }) {
   const cookieStore = await cookies()
-  const sessionId = cookieStore.get(SESSION_COOKIE)?.value
-  const session = getSession(sessionId)
+  const sessionToken = cookieStore.get(SESSION_COOKIE)?.value
+  const session = getSession(sessionToken)
 
-  if (!session || !sessionId) {
+  if (!session || !sessionToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const urlPath = `/${params.path.join("/")}/`
+  const resolvedParams = "then" in params ? await params : params
+  const urlPath = `/${resolvedParams.path.join("/")}/`
   const body = request.method === "GET" || request.method === "HEAD" ? undefined : await request.text()
 
   let response = await djangoFetch(
@@ -28,7 +29,7 @@ async function handler(request: Request, params: { path: string[] }) {
   if (response.status === 401) {
     const newAccessToken = await refreshAccessToken(session.refreshToken)
     if (newAccessToken) {
-      updateSession(sessionId, { ...session, accessToken: newAccessToken, updatedAt: Date.now() })
+      const newSessionToken = updateSession({ ...session, accessToken: newAccessToken, updatedAt: Date.now() })
       response = await djangoFetch(
         urlPath,
         {
@@ -37,11 +38,21 @@ async function handler(request: Request, params: { path: string[] }) {
         },
         newAccessToken
       )
+      if (response.ok) {
+        const responseBody = await response.text()
+        const nextResponse = new NextResponse(responseBody, {
+          status: response.status,
+          headers: {
+            "Content-Type": response.headers.get("content-type") || "application/json",
+          },
+        })
+        setSessionCookie(nextResponse, newSessionToken)
+        return nextResponse
+      }
     }
   }
 
   if (response.status === 401) {
-    deleteSession(sessionId)
     const nextResponse = NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     clearSessionCookie(nextResponse)
     return nextResponse
@@ -58,22 +69,22 @@ async function handler(request: Request, params: { path: string[] }) {
   })
 }
 
-export async function GET(request: Request, context: { params: { path: string[] } }) {
+export async function GET(request: Request, context: { params: Promise<{ path: string[] }> | { path: string[] } }) {
   return handler(request, context.params)
 }
 
-export async function POST(request: Request, context: { params: { path: string[] } }) {
+export async function POST(request: Request, context: { params: Promise<{ path: string[] }> | { path: string[] } }) {
   return handler(request, context.params)
 }
 
-export async function PUT(request: Request, context: { params: { path: string[] } }) {
+export async function PUT(request: Request, context: { params: Promise<{ path: string[] }> | { path: string[] } }) {
   return handler(request, context.params)
 }
 
-export async function PATCH(request: Request, context: { params: { path: string[] } }) {
+export async function PATCH(request: Request, context: { params: Promise<{ path: string[] }> | { path: string[] } }) {
   return handler(request, context.params)
 }
 
-export async function DELETE(request: Request, context: { params: { path: string[] } }) {
+export async function DELETE(request: Request, context: { params: Promise<{ path: string[] }> | { path: string[] } }) {
   return handler(request, context.params)
 }

@@ -24,6 +24,13 @@ interface NavigationProps {
 }
 
 export function Navigation({ user }: NavigationProps) {
+  const profileHref =
+    user?.role === "student"
+      ? "/student/profile"
+      : user?.role === "teacher"
+      ? "/teacher/availability"
+      : "/dashboard/admin"
+
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
       <div className="container mx-auto px-4 lg:px-8">
@@ -77,7 +84,7 @@ export function Navigation({ user }: NavigationProps) {
                       <Link href={`/dashboard/${user.role}`}>Dashboard</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link href={`/${user.role}/profile`}>Profile</Link>
+                      <Link href={profileHref}>Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
